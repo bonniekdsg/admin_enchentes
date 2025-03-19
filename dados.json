@@ -10,7 +10,7 @@
       "variacao24h": -0.52,
       "tendencia": "descendo",
       "risco": "alto",
-      "atualizadoEm": "2025-03-19T20:00:00.000Z",
+      "atualizadoEm": "2025-03-19T15:00:00.00",
       "latitude": -9.9753,
       "longitude": -67.8249,
       "contatoDefesaCivil": "(68) 99985-2018",
@@ -18,7 +18,7 @@
       "historico": [
         {
           "id": "medicao-1742422379670",
-          "data": "2025-03-19T20:00:00.000Z",
+          "data": "2025-03-19T15:00:00.00",
           "nivel": 15.28,
           "tendencia": "descendo"
         },
