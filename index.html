@@ -457,14 +457,25 @@
     function formatarDataExibicao(dataString) {
       if (!dataString) return '--';
       try {
-        const data = new Date(dataString);
-        return data.toLocaleString('pt-BR', { 
-          day: '2-digit', 
-          month: '2-digit', 
-          year: 'numeric', 
-          hour: '2-digit', 
-          minute: '2-digit' 
-        });
+        // Verifica se a data já está no formato brasileiro (YYYY/MM/DD HH:MM:SS)
+        if (dataString.includes('/') && dataString.includes(' ')) {
+          // Já está no formato brasileiro, apenas formatar para exibição
+          const partes = dataString.split(' ');
+          const data = partes[0].split('/');
+          const hora = partes[1].split(':');
+          
+          return `${data[2]}/${data[1]}/${data[0]} ${hora[0]}:${hora[1]}`;
+        } else {
+          // Formato ISO ou outro, converter para Date e depois para formato brasileiro
+          const data = new Date(dataString);
+          return data.toLocaleString('pt-BR', { 
+            day: '2-digit', 
+            month: '2-digit', 
+            year: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit' 
+          });
+        }
       } catch (erro) {
         console.error('Erro ao formatar data:', erro);
         return dataString;
@@ -482,12 +493,42 @@
         const dados = await resposta.json();
         dadosMunicipios = dados.municipios;
         alertas = dados.alertas || [];
-        ultimaAtualizacao = dados.ultimaAtualizacao || new Date().toISOString();
+        ultimaAtualizacao = dados.ultimaAtualizacao || (() => {
+          // Se não houver data de atualização, criar uma no formato brasileiro
+          const agora = new Date();
+          const dia = agora.getDate().toString().padStart(2, '0');
+          const mes = (agora.getMonth() + 1).toString().padStart(2, '0');
+          const ano = agora.getFullYear();
+          const hora = agora.getHours().toString().padStart(2, '0');
+          const minuto = agora.getMinutes().toString().padStart(2, '0');
+          const segundo = agora.getSeconds().toString().padStart(2, '0');
+          
+          return `${ano}/${mes}/${dia} ${hora}:${minuto}:${segundo}`;
+        })();
         
         // Processar o histórico para todos os municípios
         for (const [id, municipio] of Object.entries(dadosMunicipios)) {
           if (municipio.historico && Array.isArray(municipio.historico)) {
-            historico[id] = [...municipio.historico].sort((a, b) => new Date(b.data) - new Date(a.data));
+            // Ordenar medições considerando os dois possíveis formatos de data
+            historico[id] = [...municipio.historico].sort((a, b) => {
+              // Converter data para formato comparável se estiver no formato brasileiro
+              const dateA = a.data.includes('/') ? 
+                new Date(a.data.replace(' ', 'T').replace(/\//g, '-')) : 
+                new Date(a.data);
+              
+              const dateB = b.data.includes('/') ? 
+                new Date(b.data.replace(' ', 'T').replace(/\//g, '-')) : 
+                new Date(b.data);
+              
+              return dateB - dateA; // Ordenar do mais recente para o mais antigo
+            });
+            
+            // Garantir que cada medição tenha um ID único
+            historico[id].forEach((medicao, index) => {
+              if (!medicao.id) {
+                medicao.id = `medicao-${id}-${new Date().getTime()}-${index}`;
+              }
+            });
           } else {
             historico[id] = [];
           }
@@ -566,7 +607,21 @@
       const dataUltimoNivelSpan = document.getElementById('dataUltimoNivel');
       
       if (historico[municipioId] && historico[municipioId].length > 0) {
-        const ultimaMedicao = historico[municipioId][0]; // Já está ordenado do mais recente para o mais antigo
+        // Ordenar antes para garantir que temos a medição mais recente
+        const historicoOrdenado = [...historico[municipioId]].sort((a, b) => {
+          // Converter data para formato comparável se estiver no formato brasileiro
+          const dateA = a.data.includes('/') ? 
+            new Date(a.data.replace(' ', 'T').replace(/\//g, '-')) : 
+            new Date(a.data);
+          
+          const dateB = b.data.includes('/') ? 
+            new Date(b.data.replace(' ', 'T').replace(/\//g, '-')) : 
+            new Date(b.data);
+          
+          return dateB - dateA; // Ordenar do mais recente para o mais antigo
+        });
+        
+        const ultimaMedicao = historicoOrdenado[0]; // Pegamos a mais recente
         ultimoNivelSpan.textContent = ultimaMedicao.nivel.toFixed(2);
         dataUltimoNivelSpan.textContent = formatarDataExibicao(ultimaMedicao.data);
       } else {
@@ -677,6 +732,20 @@
         return;
       }
       
+      // Ordenar as medições considerando o formato brasileiro de data
+      medicoes.sort((a, b) => {
+        // Converter data para formato comparável se estiver no formato brasileiro
+        const dateA = a.data.includes('/') ? 
+          new Date(a.data.replace(' ', 'T').replace(/\//g, '-')) : 
+          new Date(a.data);
+        
+        const dateB = b.data.includes('/') ? 
+          new Date(b.data.replace(' ', 'T').replace(/\//g, '-')) : 
+          new Date(b.data);
+        
+        return dateB - dateA; // Ordenar do mais recente para o mais antigo
+      });
+      
       // Preencher tabela de histórico
       tabelaHistorico.innerHTML = ''; // Limpar tabela
       
@@ -685,7 +754,7 @@
       medicoes.forEach((medicao, index) => {
         const row = document.createElement('tr');
         
-        // Calcular variação
+        // Calcular variação (em relação à medição anterior na lista ordenada)
         let variacaoTxt = '--';
         let tendenciaIcon = '';
         
@@ -722,8 +791,13 @@
             tendenciaDisplay = '<i class="fas fa-equals text-secondary me-1"></i>Estável';
         }
         
-        // Usar o ID existente ou gerar um novo baseado no índice se não existir
-        const medicaoId = medicao.id || `medicao-${municipioId}-${index}`;
+        // Garantir que cada medição tenha um ID único
+        const medicaoId = medicao.id || `medicao-${municipioId}-${new Date().getTime()}-${index}`;
+        
+        // Se não tiver ID ainda, adiciona ao objeto
+        if (!medicao.id) {
+          medicao.id = medicaoId;
+        }
         
         row.innerHTML = `
           <td>${formatarDataExibicao(medicao.data)}</td>
@@ -760,10 +834,10 @@
         return;
       }
       
-      // Criar nova medição
+      // Criar nova medição com a data no formato brasileiro
       const novaMedicao = {
         id: `medicao-${new Date().getTime()}`,
-        data: dataInput.value,
+        data: dataInput.value.replace('T', ' ').replace(/-/g, '/'),
         nivel: parseFloat(nivelInput.value),
         tendencia: tendenciaInput.value
       };
@@ -775,13 +849,26 @@
       
       // Adicionar ao histórico e ordenar
       historico[municipioId].push(novaMedicao);
-      historico[municipioId].sort((a, b) => new Date(b.data) - new Date(a.data));
+      historico[municipioId].sort((a, b) => {
+        // Ordenar datas no formato local brasileira corretamente
+        const dateA = new Date(a.data.replace(' ', 'T').replace(/\//g, '-'));
+        const dateB = new Date(b.data.replace(' ', 'T').replace(/\//g, '-'));
+        return dateB - dateA;
+      });
       
       // Atualizar o histórico do município
       dadosMunicipios[municipioId].historico = [...historico[municipioId]];
       
-      // Atualizar a última atualização
-      ultimaAtualizacao = new Date().toISOString();
+      // Atualizar a última atualização - manter formato local
+      const agora = new Date();
+      const dia = agora.getDate().toString().padStart(2, '0');
+      const mes = (agora.getMonth() + 1).toString().padStart(2, '0');
+      const ano = agora.getFullYear();
+      const hora = agora.getHours().toString().padStart(2, '0');
+      const minuto = agora.getMinutes().toString().padStart(2, '0');
+      const segundo = agora.getSeconds().toString().padStart(2, '0');
+      
+      ultimaAtualizacao = `${ano}/${mes}/${dia} ${hora}:${minuto}:${segundo}`;
       
       // Atualizar a visualização dos dados
       const dadosAtualizados = {
@@ -886,7 +973,9 @@
           dadosMunicipios[municipioId].variacao24h = variacao24h;
           dadosMunicipios[municipioId].tendencia = tendencia;
           dadosMunicipios[municipioId].risco = risco;
-          dadosMunicipios[municipioId].atualizadoEm = new Date(dataAtualizacao).toISOString();
+          
+          // Corrigir o problema de timezone - preservar o horário local selecionado pelo usuário
+          dadosMunicipios[municipioId].atualizadoEm = dataAtualizacao.replace('T', ' ').replace(/-/g, '/');
           
           // Adicionar entrada ao histórico
           if (!historico[municipioId]) {
@@ -895,20 +984,34 @@
           
           const novaMedicao = {
             id: `medicao-${new Date().getTime()}`,
-            data: new Date(dataAtualizacao).toISOString(),
+            // Utilizar o horário exato que o usuário inseriu
+            data: dataAtualizacao.replace('T', ' ').replace(/-/g, '/'),
             nivel: nivelAtual,
             tendencia: tendencia
           };
           
           // Adicionar ao histórico e ordenar
           historico[municipioId].push(novaMedicao);
-          historico[municipioId].sort((a, b) => new Date(b.data) - new Date(a.data));
+          historico[municipioId].sort((a, b) => {
+            // Ordenar datas no formato local brasileira corretamente
+            const dateA = new Date(a.data.replace(' ', 'T').replace(/\//g, '-'));
+            const dateB = new Date(b.data.replace(' ', 'T').replace(/\//g, '-'));
+            return dateB - dateA;
+          });
           
           // Atualizar o histórico do município
           dadosMunicipios[municipioId].historico = [...historico[municipioId]];
           
-          // Atualizar a última atualização
-          ultimaAtualizacao = new Date().toISOString();
+          // Atualizar a última atualização - manter formato local
+          const agora = new Date();
+          const dia = agora.getDate().toString().padStart(2, '0');
+          const mes = (agora.getMonth() + 1).toString().padStart(2, '0');
+          const ano = agora.getFullYear();
+          const hora = agora.getHours().toString().padStart(2, '0');
+          const minuto = agora.getMinutes().toString().padStart(2, '0');
+          const segundo = agora.getSeconds().toString().padStart(2, '0');
+          
+          ultimaAtualizacao = `${ano}/${mes}/${dia} ${hora}:${minuto}:${segundo}`;
           
           // Atualizar a visualização dos dados
           const dadosAtualizados = {
@@ -933,8 +1036,7 @@
           document.getElementById('municipio').value = municipioId;
           
           // Preencher data atual novamente
-          const agora = new Date();
-          const dataFormatada = agora.toISOString().slice(0, 16);
+          const dataFormatada = `${ano}-${mes}-${dia}T${hora}:${minuto}`;
           document.getElementById('dataAtualizacao').value = dataFormatada;
         } else {
           alert('Município não encontrado nos dados.');
@@ -962,6 +1064,17 @@
       }
       
       try {
+        // Formatar data de emissão no horário local
+        const agora = new Date();
+        const dia = agora.getDate().toString().padStart(2, '0');
+        const mes = (agora.getMonth() + 1).toString().padStart(2, '0');
+        const ano = agora.getFullYear();
+        const hora = agora.getHours().toString().padStart(2, '0');
+        const minuto = agora.getMinutes().toString().padStart(2, '0');
+        const segundo = agora.getSeconds().toString().padStart(2, '0');
+        
+        const dataEmissao = `${ano}/${mes}/${dia} ${hora}:${minuto}:${segundo}`;
+        
         // Criar novo alerta
         const novoAlerta = {
           id: `alerta-${new Date().getTime()}`,
@@ -971,14 +1084,14 @@
           descricao,
           instrucoes,
           abrigos,
-          emitidoEm: new Date().toISOString()
+          emitidoEm: dataEmissao
         };
         
         // Adicionar à lista global de alertas
         alertas.push(novoAlerta);
         
-        // Atualizar a última atualização
-        ultimaAtualizacao = new Date().toISOString();
+        // Atualizar a última atualização com formato local
+        ultimaAtualizacao = dataEmissao;
         
         // Atualizar a visualização dos dados
         const dados = {
@@ -1002,8 +1115,16 @@
     // Função para exportar dados para um arquivo JSON
     function exportarDadosJSON() {
       try {
-        // Atualizar a data da última atualização
-        ultimaAtualizacao = new Date().toISOString();
+        // Atualizar a data da última atualização com o formato local
+        const agora = new Date();
+        const dia = agora.getDate().toString().padStart(2, '0');
+        const mes = (agora.getMonth() + 1).toString().padStart(2, '0');
+        const ano = agora.getFullYear();
+        const hora = agora.getHours().toString().padStart(2, '0');
+        const minuto = agora.getMinutes().toString().padStart(2, '0');
+        const segundo = agora.getSeconds().toString().padStart(2, '0');
+        
+        ultimaAtualizacao = `${ano}/${mes}/${dia} ${hora}:${minuto}:${segundo}`;
         
         // Criar objeto completo com todos os dados
         const dados = {
