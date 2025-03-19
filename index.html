@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Administração - Monitor de Enchentes</title>
+  <link rel="icon" href="https://static.wixstatic.com/ficons/c96204_e567a922c44e440f8589c59322f43502~mv2.ico" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary-color: #0088cc;
+      --secondary-color: #5bc0de;
+      --danger-color: #dc3545;
+      --warning-color: #ffc107;
+      --success-color: #28a745;
+      --dark-color: #343a40;
+      --light-color: #f8f9fa;
+      --gray-color: #6c757d;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background-color: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, var(--primary-color), #006699);
+      color: white;
+      padding: 1.5rem 0;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .card {
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.06);
+      margin-bottom: 1.5rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      overflow: hidden;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+    }
+    
+    .card-header {
+      background-color: white;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      padding: 1rem 1.25rem;
+    }
+    
+    .btn-primary {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+    
+    .btn-primary:hover {
+      background-color: #006699;
+      border-color: #006699;
+    }
+    
+    pre {
+      background-color: #f8f9fa;
+      padding: 1rem;
+      border-radius: 5px;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <header class="header" role="banner">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+            <!-- Logo original do Radar de Enchentes MPAC (lado esquerdo) -->
+            <div>
+                <img src="https://static.wixstatic.com/media/c96204_fecf1c65eaf64f22b97b4d31736b208c~mv2.png" alt="Radar de Enchentes MPAC" class="img-fluid" style="max-height: 120px;">
+            </div>
+            
+            <!-- Texto de Administração (lado direito) -->
+            <div class="text-end">
+                <h4 class="text-white">Administração</h4>
+            </div>
+        </div>
+    </div>
+  </header>
+
+  <div class="container my-4">
+    <div class="row">
+      <div class="col-lg-8 mx-auto">
+        <!-- Nova seção para histórico de medições (movida para cima) -->
+        <div class="card mb-4">
+          <div class="card-header bg-light">
+            <h3 class="card-title mb-0">Histórico de Medições</h3>
+          </div>
+          <div class="card-body">
+            <div class="mb-3">
+              <label for="historicoMunicipio" class="form-label">Município</label>
+              <select id="historicoMunicipio" class="form-select">
+                <option value="">Selecione um município...</option>
+                <!-- Opções serão preenchidas dinamicamente -->
+              </select>
+            </div>
+            
+            <div id="tabelaHistoricoContainer" style="display: none;">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Medições registradas</h5>
+                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalNovaMedicao">
+                  <i class="fas fa-plus me-1"></i> Nova Medição
+                </button>
+              </div>
+              
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Data/Hora</th>
+                      <th>Nível (m)</th>
+                      <th>Variação</th>
+                      <th>Tendência</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tabelaHistorico">
+                    <!-- Dados serão inseridos dinamicamente -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+            <div id="semHistoricoMsg" class="alert alert-info" style="display: none;">
+              Nenhuma medição registrada para este município.
+            </div>
+          </div>
+        </div>
+        
+        <!-- Seção Atualizar Nível do Rio (movida para baixo) -->
+        <div class="card mb-4">
+          <div class="card-header bg-light">
+            <h3 class="card-title mb-0">Atualizar Nível do Rio</h3>
+          </div>
+          <div class="card-body">
+            <form id="formNivel">
+              <div class="mb-3">
+                <label for="municipio" class="form-label">Município</label>
+                <select id="municipio" class="form-select" required>
+                  <option value="">Selecione...</option>
+                  <option value="rio-branco">Rio Branco</option>
+                  <option value="cruzeiro-do-sul">Cruzeiro do Sul</option>
+                  <option value="tarauaca">Tarauacá</option>
+                  <option value="feijo">Feijó</option>
+                  <option value="aldeia-dos-patos">Aldeia dos Patos</option>
+                  <option value="assis-brasil">Assis Brasil</option>
+                  <option value="brasileia">Brasiléia</option>
+                  <option value="xapuri-dolores">Xapuri C. Dolores</option>
+                  <option value="xapuri">Xapuri</option>
+                  <option value="capixaba">Capixaba</option>
+                  <option value="espalha">Espalha</option>
+                  <option value="riozinho-do-rola">Riozinho do Rola</option>
+                  <option value="porto-acre">Porto Acre</option>
+                  <option value="jordao">Jordão</option>
+                  <option value="seringal-santa-helena">Seringal Santa Helena</option>
+                  <option value="mancio-lima">Mâncio Lima</option>
+                  <option value="ponte-do-liberdade">Ponte do Liberdade</option>
+                  <option value="porto-walter">Porto Walter</option>
+                  <option value="marechal-thaumaturgo">Marechal Thaumaturgo</option>
+                </select>
+              </div>
+              
+              <div class="mb-3">
+                <label for="nivelAtual" class="form-label">Nível Atual (metros)</label>
+                <input type="number" id="nivelAtual" class="form-control" step="0.01" required>
+                <small id="ultimoNivelInfo" class="form-text text-muted">Último nível registrado: <span id="ultimoNivel">--</span>m em <span id="dataUltimoNivel">--</span></small>
+              </div>
+              
+              <div class="mb-3">
+                <label for="dataAtualizacao" class="form-label">Data e Hora da Medição</label>
+                <input type="datetime-local" id="dataAtualizacao" class="form-control" required>
+              </div>
+              
+              <div class="mb-3">
+                <label for="variacao24h" class="form-label">Variação em relação à última medição (metros)</label>
+                <input type="number" id="variacao24h" class="form-control" step="0.01" readonly>
+                <small class="form-text text-muted">A variação é calculada automaticamente com base no último nível registrado.</small>
+              </div>
+              
+              <div class="mb-3">
+                <label for="tendencia" class="form-label">Tendência</label>
+                <select id="tendencia" class="form-select" required>
+                  <option value="subindo">Subindo</option>
+                  <option value="descendo">Descendo</option>
+                  <option value="estavel">Estável</option>
+                </select>
+                <small class="form-text text-muted">Definida automaticamente com base na variação, mas pode ser alterada manualmente.</small>
+              </div>
+              
+              <div class="mb-3">
+                <label for="risco" class="form-label">Nível de Risco</label>
+                <select id="risco" class="form-select" disabled>
+                  <option value="baixo">Baixo</option>
+                  <option value="medio">Médio</option>
+                  <option value="alto">Alto</option>
+                </select>
+                <small class="form-text text-muted">O risco é calculado automaticamente com base nos níveis de alerta e inundação.</small>
+              </div>
+              
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save me-2"></i> Atualizar Dados
+              </button>
+            </form>
+          </div>
+        </div>
+        
+        <!-- Modal para adicionar nova medição ao histórico -->
+        <div class="modal fade" id="modalNovaMedicao" tabindex="-1" aria-labelledby="modalNovaMedicaoLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalNovaMedicaoLabel">Adicionar Medição Histórica</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+              </div>
+              <div class="modal-body">
+                <form id="formNovaMedicao">
+                  <div class="mb-3">
+                    <label for="medicaoMunicipio" class="form-label">Município</label>
+                    <input type="text" id="medicaoMunicipio" class="form-control" readonly>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label for="medicaoData" class="form-label">Data e Hora da Medição</label>
+                    <input type="datetime-local" id="medicaoData" class="form-control" required>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label for="medicaoNivel" class="form-label">Nível (metros)</label>
+                    <input type="number" id="medicaoNivel" class="form-control" step="0.01" required>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label for="medicaoTendencia" class="form-label">Tendência</label>
+                    <select id="medicaoTendencia" class="form-select" required>
+                      <option value="subindo">Subindo</option>
+                      <option value="descendo">Descendo</option>
+                      <option value="estavel">Estável</option>
+                    </select>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnSalvarMedicao">Salvar Medição</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Modal para confirmar exclusão de medição -->
+        <div class="modal fade" id="modalExcluirMedicao" tabindex="-1" aria-labelledby="modalExcluirMedicaoLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalExcluirMedicaoLabel">Confirmar Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+              </div>
+              <div class="modal-body">
+                <input type="hidden" id="medicaoIdExcluir">
+                <p>Tem certeza que deseja excluir esta medição histórica?</p>
+                <p class="text-danger">Esta ação não pode ser desfeita.</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="btnConfirmarExclusao">Excluir Medição</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card mb-4">
+          <div class="card-header bg-light">
+            <h3 class="card-title mb-0">Adicionar Alerta</h3>
+          </div>
+          <div class="card-body">
+            <form id="formAlerta">
+              <div class="mb-3">
+                <label for="alertaMunicipio" class="form-label">Município</label>
+                <select id="alertaMunicipio" class="form-select" required>
+                  <option value="">Selecione...</option>
+                  <option value="rio-branco">Rio Branco</option>
+                  <option value="cruzeiro-do-sul">Cruzeiro do Sul</option>
+                  <option value="tarauaca">Tarauacá</option>
+                  <option value="feijo">Feijó</option>
+                  <option value="aldeia-dos-patos">Aldeia dos Patos</option>
+                  <option value="assis-brasil">Assis Brasil</option>
+                  <option value="brasileia">Brasiléia</option>
+                  <option value="xapuri-dolores">Xapuri C. Dolores</option>
+                  <option value="xapuri">Xapuri</option>
+                  <option value="capixaba">Capixaba</option>
+                  <option value="espalha">Espalha</option>
+                  <option value="riozinho-do-rola">Riozinho do Rola</option>
+                  <option value="porto-acre">Porto Acre</option>
+                  <option value="jordao">Jordão</option>
+                  <option value="seringal-santa-helena">Seringal Santa Helena</option>
+                  <option value="mancio-lima">Mâncio Lima</option>
+                  <option value="ponte-do-liberdade">Ponte do Liberdade</option>
+                  <option value="porto-walter">Porto Walter</option>
+                  <option value="marechal-thaumaturgo">Marechal Thaumaturgo</option>
+                </select>
+              </div>
+              
+              <div class="mb-3">
+                <label for="alertaTitulo" class="form-label">Título do Alerta</label>
+                <input type="text" id="alertaTitulo" class="form-control" required>
+              </div>
+              
+              <div class="mb-3">
+                <label for="alertaNivel" class="form-label">Nível do Alerta</label>
+                <select id="alertaNivel" class="form-select" required>
+                  <option value="baixo">Informativo</option>
+                  <option value="medio">Atenção</option>
+                  <option value="alto">Crítico</option>
+                </select>
+              </div>
+              
+              <div class="mb-3">
+                <label for="alertaDescricao" class="form-label">Descrição</label>
+                <textarea id="alertaDescricao" class="form-control" rows="3" required></textarea>
+              </div>
+              
+              <div class="mb-3">
+                <label for="alertaInstrucoes" class="form-label">Instruções (uma por linha)</label>
+                <textarea id="alertaInstrucoes" class="form-control" rows="3" required></textarea>
+              </div>
+              
+              <div class="mb-3">
+                <label for="alertaAbrigos" class="form-label">Abrigos (um por linha, opcional)</label>
+                <textarea id="alertaAbrigos" class="form-control" rows="3"></textarea>
+              </div>
+              
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-bell me-2"></i> Adicionar Alerta
+              </button>
+            </form>
+          </div>
+        </div>
+        
+        <!-- Seção para visualizar dados atuais -->
+        <div class="card mb-4">
+          <div class="card-header bg-light">
+            <h3 class="card-title mb-0">Dados Atuais</h3>
+          </div>
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <p class="mb-0">Dados carregados do arquivo dados.json:</p>
+              <button type="button" class="btn btn-success" id="btnExportarJSON">
+                <i class="fas fa-download me-2"></i> Exportar JSON Atualizado
+              </button>
+            </div>
+            <pre id="dadosAtuais" class="p-3 bg-light" style="max-height: 400px; overflow: auto;">Carregando dados...</pre>
+          </div>
+        </div>
+        
+        <div class="mt-4" id="resultados"></div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Rodapé no mesmo estilo do index.html -->
+  <footer class="py-4 mt-5" style="background-color: #343a40; color: white;">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 mb-4 mb-md-0">
+          <h5 class="mb-3">Sistema de Monitoramento de Enchentes</h5>
+          <p class="mb-0" style="font-size: 0.9rem;">Sistema de monitoramento e alerta para enchentes no estado do Acre.</p>
+        </div>
+        <div class="col-md-4 mb-4 mb-md-0">
+          <h5 class="mb-3">Contatos de Emergência</h5>
+          <ul class="list-unstyled mb-0" style="font-size: 0.9rem;">
+            <li class="mb-2"><i class="fas fa-phone-alt me-2"></i> Bombeiros: 193</li>
+            <li class="mb-2"><i class="fas fa-phone-alt me-2"></i> Defesa Civil: (68) 3223-1177</li>
+            <li class="mb-2"><i class="fas fa-phone-alt me-2"></i> Polícia Militar: 190</li>
+            <li class="mb-2"><i class="fas fa-phone-alt me-2"></i> SAMU: 192</li>
+          </ul>
+        </div>
+        <div class="col-md-4">
+          <h5 class="mb-3">Parceiros</h5>
+          <div class="d-flex flex-wrap">
+            <div class="me-3 mb-3">
+              <img src="https://via.placeholder.com/80x40?text=MPAC" alt="Logo MPAC" width="80" height="40" class="bg-white rounded p-1">
+            </div>
+            <div class="me-3 mb-3">
+              <img src="https://via.placeholder.com/80x40?text=DefesaCivil" alt="Logo Defesa Civil" width="80" height="40" class="bg-white rounded p-1">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="border-top border-secondary pt-4 mt-4">
+        <div class="row">
+          <div class="col-12 text-center">
+            <p class="text-white fw-normal mb-0" style="font-weight: 400 !important; font-size: 0.85rem !important;">© 2025 Desenvolvido por Seringal Lab - Laboratório de Inovação - Todos os direitos reservados.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
+  <script>
+    // Variáveis globais
+    let dadosMunicipios = {};
+    let historico = {};
+    let alertas = [];
+    let ultimaAtualizacao = '';
+    
+    // Ao carregar a página
+    document.addEventListener('DOMContentLoaded', function() {
+      // Preencher data atual no campo de data de atualização
+      const agora = new Date();
+      const dataFormatada = agora.toISOString().slice(0, 16); // Formato: YYYY-MM-DDTHH:MM
+      document.getElementById('dataAtualizacao').value = dataFormatada;
+      
+      // Carregar dados atuais
+      carregarDados();
+      
+      // Configurar formulários
+      document.getElementById('formNivel').addEventListener('submit', atualizarNivel);
+      document.getElementById('formAlerta').addEventListener('submit', adicionarAlerta);
+      
+      // Adicionar evento para calcular o risco automaticamente
+      document.getElementById('municipio').addEventListener('change', municipioSelecionado);
+      document.getElementById('nivelAtual').addEventListener('input', function() {
+        calcularRiscoAutomatico();
+        calcularVariacao();
+      });
+      
+      // Configurar o histórico de medições
+      document.getElementById('historicoMunicipio').addEventListener('change', carregarHistoricoMunicipio);
+      document.getElementById('btnSalvarMedicao').addEventListener('click', salvarMedicaoHistorica);
+      document.getElementById('btnConfirmarExclusao').addEventListener('click', excluirMedicaoHistorica);
+      
+      // Configurar o modal de exclusão de medição
+      const modalExcluirMedicao = document.getElementById('modalExcluirMedicao');
+      if (modalExcluirMedicao) {
+        modalExcluirMedicao.addEventListener('show.bs.modal', function (event) {
+          const button = event.relatedTarget;
+          const medicaoId = button.getAttribute('data-bs-medicao-id');
+          document.getElementById('medicaoIdExcluir').value = medicaoId;
+        });
+      }
+      
+      // Configurar botão de exportação de JSON
+      document.getElementById('btnExportarJSON').addEventListener('click', exportarDadosJSON);
+    });
+    
+    // Função para formatação de data para exibição
+    function formatarDataExibicao(dataString) {
+      if (!dataString) return '--';
+      try {
+        const data = new Date(dataString);
+        return data.toLocaleString('pt-BR', { 
+          day: '2-digit', 
+          month: '2-digit', 
+          year: 'numeric', 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        });
+      } catch (erro) {
+        console.error('Erro ao formatar data:', erro);
+        return dataString;
+      }
+    }
+    
+    // Função para carregar dados atuais
+    async function carregarDados() {
+      try {
+        const resposta = await fetch('dados.json');
+        if (!resposta.ok) {
+          throw new Error(`Erro ao carregar dados: ${resposta.status}`);
+        }
+        
+        const dados = await resposta.json();
+        dadosMunicipios = dados.municipios;
+        alertas = dados.alertas || [];
+        ultimaAtualizacao = dados.ultimaAtualizacao || new Date().toISOString();
+        
+        // Processar o histórico para todos os municípios
+        for (const [id, municipio] of Object.entries(dadosMunicipios)) {
+          if (municipio.historico && Array.isArray(municipio.historico)) {
+            historico[id] = [...municipio.historico].sort((a, b) => new Date(b.data) - new Date(a.data));
+          } else {
+            historico[id] = [];
+          }
+        }
+        
+        // Mostrar dados atualizados
+        document.getElementById('dadosAtuais').textContent = 
+          JSON.stringify(dados, null, 2);
+        
+        // Preencher opções de município no seletor de histórico
+        preencherSeletorHistoricoMunicipios();
+        
+      } catch (erro) {
+        console.error('Erro ao carregar dados:', erro);
+        alert(`Erro ao carregar dados: ${erro.message}`);
+      }
+    }
+    
+    // Preencher seletor de municípios para visualização de histórico
+    function preencherSeletorHistoricoMunicipios() {
+      const historicoSelect = document.getElementById('historicoMunicipio');
+      const municipioSelect = document.getElementById('municipio');
+      
+      // Limpar opções existentes, exceto a primeira
+      while (historicoSelect.options.length > 1) {
+        historicoSelect.remove(1);
+      }
+      
+      // Limpar opções existentes no seletor de municípios principal, exceto a primeira
+      while (municipioSelect.options.length > 1) {
+        municipioSelect.remove(1);
+      }
+      
+      // Adicionar opções atualizadas
+      for (const [id, municipio] of Object.entries(dadosMunicipios)) {
+        // Para o seletor de histórico
+        const option1 = document.createElement('option');
+        option1.value = id;
+        option1.textContent = municipio.nome;
+        historicoSelect.appendChild(option1);
+        
+        // Para o seletor de municípios principal
+        const option2 = document.createElement('option');
+        option2.value = id;
+        option2.textContent = municipio.nome;
+        municipioSelect.appendChild(option2);
+      }
+    }
+    
+    // Evento quando um município é selecionado no formulário principal
+    function municipioSelecionado() {
+      const municipioId = document.getElementById('municipio').value;
+      if (municipioId && dadosMunicipios[municipioId]) {
+        const municipio = dadosMunicipios[municipioId];
+        
+        // Preencher nível atual
+        document.getElementById('nivelAtual').value = municipio.nivelAtual;
+        
+        // Mostrar último nível registrado
+        mostrarUltimoNivelRegistrado(municipioId);
+        
+        // Calcular variação com base no último nível registrado
+        calcularVariacao();
+        
+        // Definir tendência com base na variação
+        definirTendenciaAutomatica();
+        
+        // Calcular e definir risco
+        calcularRiscoAutomatico();
+      }
+    }
+    
+    // Mostrar informações sobre o último nível registrado
+    function mostrarUltimoNivelRegistrado(municipioId) {
+      const ultimoNivelSpan = document.getElementById('ultimoNivel');
+      const dataUltimoNivelSpan = document.getElementById('dataUltimoNivel');
+      
+      if (historico[municipioId] && historico[municipioId].length > 0) {
+        const ultimaMedicao = historico[municipioId][0]; // Já está ordenado do mais recente para o mais antigo
+        ultimoNivelSpan.textContent = ultimaMedicao.nivel.toFixed(2);
+        dataUltimoNivelSpan.textContent = formatarDataExibicao(ultimaMedicao.data);
+      } else {
+        ultimoNivelSpan.textContent = '--';
+        dataUltimoNivelSpan.textContent = '--';
+      }
+    }
+    
+    // Calcular variação automática com base no último nível registrado
+    function calcularVariacao() {
+      const municipioId = document.getElementById('municipio').value;
+      const nivelAtualInput = document.getElementById('nivelAtual');
+      const variacaoInput = document.getElementById('variacao24h');
+      
+      if (municipioId && nivelAtualInput.value && historico[municipioId] && historico[municipioId].length > 0) {
+        const nivelAtual = parseFloat(nivelAtualInput.value);
+        const ultimaMedicao = historico[municipioId][0]; // Mais recente
+        const ultimoNivel = ultimaMedicao.nivel;
+        
+        // Calcular variação
+        const variacao = nivelAtual - ultimoNivel;
+        variacaoInput.value = variacao.toFixed(2);
+        
+        // Definir tendência automaticamente
+        definirTendenciaAutomatica();
+      } else {
+        variacaoInput.value = '0.00';
+      }
+    }
+    
+    // Definir tendência automaticamente com base na variação
+    function definirTendenciaAutomatica() {
+      const variacaoInput = document.getElementById('variacao24h');
+      const tendenciaSelect = document.getElementById('tendencia');
+      
+      if (variacaoInput.value) {
+        const variacao = parseFloat(variacaoInput.value);
+        
+        if (variacao > 0.02) {
+          tendenciaSelect.value = 'subindo';
+        } else if (variacao < -0.02) {
+          tendenciaSelect.value = 'descendo';
+        } else {
+          tendenciaSelect.value = 'estavel';
+        }
+      }
+    }
+    
+    // Calcular risco automaticamente com base no nível atual
+    function calcularRiscoAutomatico() {
+      const municipioId = document.getElementById('municipio').value;
+      const nivelAtualInput = document.getElementById('nivelAtual');
+      const riscoSelect = document.getElementById('risco');
+      
+      if (municipioId && nivelAtualInput.value && dadosMunicipios[municipioId]) {
+        const nivelAtual = parseFloat(nivelAtualInput.value);
+        const municipio = dadosMunicipios[municipioId];
+        const nivelAlerta = municipio.nivelAlerta;
+        const nivelInundacao = municipio.nivelInundacao;
+        
+        let risco;
+        
+        // Lógica de classificação de risco:
+        // - Baixo: abaixo do nível de alerta
+        // - Médio: entre o nível de alerta e o nível de inundação
+        // - Alto: acima do nível de inundação
+        if (nivelAtual >= nivelInundacao) {
+          risco = 'alto';
+        } else if (nivelAtual >= nivelAlerta) {
+          risco = 'medio';
+        } else {
+          risco = 'baixo';
+        }
+        
+        // Definir valor do select de risco
+        riscoSelect.value = risco;
+        
+        // Destacar visualmente o nível de risco
+        riscoSelect.className = 'form-select ';
+        if (risco === 'alto') {
+          riscoSelect.className += 'bg-danger text-white';
+        } else if (risco === 'medio') {
+          riscoSelect.className += 'bg-warning';
+        } else {
+          riscoSelect.className += 'bg-success text-white';
+        }
+      }
+    }
+    
+    // Carregar histórico de medições para um município
+    function carregarHistoricoMunicipio() {
+      const municipioId = document.getElementById('historicoMunicipio').value;
+      const tabelaHistorico = document.getElementById('tabelaHistorico');
+      const tabelaHistoricoContainer = document.getElementById('tabelaHistoricoContainer');
+      const semHistoricoMsg = document.getElementById('semHistoricoMsg');
+      
+      if (!municipioId) {
+        tabelaHistoricoContainer.style.display = 'none';
+        semHistoricoMsg.style.display = 'none';
+        return;
+      }
+      
+      const medicoes = historico[municipioId] || [];
+      
+      if (medicoes.length === 0) {
+        tabelaHistoricoContainer.style.display = 'none';
+        semHistoricoMsg.style.display = 'block';
+        return;
+      }
+      
+      // Preencher tabela de histórico
+      tabelaHistorico.innerHTML = ''; // Limpar tabela
+      
+      let lastNivel = null;
+      
+      medicoes.forEach((medicao, index) => {
+        const row = document.createElement('tr');
+        
+        // Calcular variação
+        let variacaoTxt = '--';
+        let tendenciaIcon = '';
+        
+        if (lastNivel !== null) {
+          const variacao = medicao.nivel - lastNivel;
+          const variacaoFormatada = variacao.toFixed(2);
+          
+          if (variacao > 0) {
+            variacaoTxt = `+${variacaoFormatada}m`;
+            tendenciaIcon = '<i class="fas fa-arrow-up text-danger me-1"></i>';
+          } else if (variacao < 0) {
+            variacaoTxt = `${variacaoFormatada}m`;
+            tendenciaIcon = '<i class="fas fa-arrow-down text-success me-1"></i>';
+          } else {
+            variacaoTxt = '0.00m';
+            tendenciaIcon = '<i class="fas fa-equals text-secondary me-1"></i>';
+          }
+        }
+        
+        lastNivel = medicao.nivel;
+        
+        // Formatar tendência
+        let tendenciaTxt = medicao.tendencia || 'estavel';
+        let tendenciaDisplay = '';
+        
+        switch (tendenciaTxt) {
+          case 'subindo':
+            tendenciaDisplay = '<i class="fas fa-arrow-up text-danger me-1"></i>Subindo';
+            break;
+          case 'descendo':
+            tendenciaDisplay = '<i class="fas fa-arrow-down text-success me-1"></i>Descendo';
+            break;
+          default:
+            tendenciaDisplay = '<i class="fas fa-equals text-secondary me-1"></i>Estável';
+        }
+        
+        // Usar o ID existente ou gerar um novo baseado no índice se não existir
+        const medicaoId = medicao.id || `medicao-${municipioId}-${index}`;
+        
+        row.innerHTML = `
+          <td>${formatarDataExibicao(medicao.data)}</td>
+          <td>${medicao.nivel.toFixed(2)}m</td>
+          <td>${variacaoTxt}</td>
+          <td>${tendenciaDisplay}</td>
+          <td>
+            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#modalExcluirMedicao" data-bs-medicao-id="${medicaoId}">
+              <i class="fas fa-trash"></i> Excluir
+            </button>
+          </td>
+        `;
+        
+        tabelaHistorico.appendChild(row);
+      });
+      
+      // Configurar botão de adicionar medição
+      document.getElementById('medicaoMunicipio').value = dadosMunicipios[municipioId].nome;
+      
+      // Atualizar visibilidade
+      tabelaHistoricoContainer.style.display = 'block';
+      semHistoricoMsg.style.display = 'none';
+    }
+    
+    // Salvar nova medição histórica
+    function salvarMedicaoHistorica() {
+      const municipioId = document.getElementById('historicoMunicipio').value;
+      const dataInput = document.getElementById('medicaoData');
+      const nivelInput = document.getElementById('medicaoNivel');
+      const tendenciaInput = document.getElementById('medicaoTendencia');
+      
+      if (!municipioId || !dataInput.value || !nivelInput.value) {
+        alert('Preencha todos os campos obrigatórios.');
+        return;
+      }
+      
+      // Criar nova medição
+      const novaMedicao = {
+        id: `medicao-${new Date().getTime()}`,
+        data: dataInput.value,
+        nivel: parseFloat(nivelInput.value),
+        tendencia: tendenciaInput.value
+      };
+      
+      // Adicionar ao histórico local
+      if (!historico[municipioId]) {
+        historico[municipioId] = [];
+      }
+      
+      // Adicionar ao histórico e ordenar
+      historico[municipioId].push(novaMedicao);
+      historico[municipioId].sort((a, b) => new Date(b.data) - new Date(a.data));
+      
+      // Atualizar o histórico do município
+      dadosMunicipios[municipioId].historico = [...historico[municipioId]];
+      
+      // Atualizar a última atualização
+      ultimaAtualizacao = new Date().toISOString();
+      
+      // Atualizar a visualização dos dados
+      const dadosAtualizados = {
+        ultimaAtualizacao: ultimaAtualizacao,
+        municipios: dadosMunicipios,
+        alertas: alertas
+      };
+      document.getElementById('dadosAtuais').textContent = JSON.stringify(dadosAtualizados, null, 2);
+      
+      // Em um ambiente real, atualizaríamos o servidor aqui
+      
+      // Atualizar a tabela de histórico
+      carregarHistoricoMunicipio();
+      
+      // Fechar o modal
+      const modal = bootstrap.Modal.getInstance(document.getElementById('modalNovaMedicao'));
+      modal.hide();
+      
+      // Limpar formulário
+      document.getElementById('formNovaMedicao').reset();
+      
+      // Notificar usuário
+      alert('Medição adicionada com sucesso!');
+    }
+    
+    // Função para excluir uma medição histórica
+    function excluirMedicaoHistorica() {
+      const medicaoId = document.getElementById('medicaoIdExcluir').value;
+      const municipioId = document.getElementById('historicoMunicipio').value;
+      
+      if (!medicaoId || !municipioId) {
+        alert('Não foi possível identificar a medição a ser excluída.');
+        return;
+      }
+      
+      try {
+        // Encontrar a medição a ser excluída
+        const indiceMedicao = historico[municipioId].findIndex(medicao => medicao.id === medicaoId);
+        
+        if (indiceMedicao === -1) {
+          alert('Medição não encontrada.');
+          return;
+        }
+        
+        // Remover a medição do histórico
+        historico[municipioId].splice(indiceMedicao, 1);
+        
+        // Atualizar o histórico do município
+        dadosMunicipios[municipioId].historico = [...historico[municipioId]];
+        
+        // Atualizar a última atualização
+        ultimaAtualizacao = new Date().toISOString();
+        
+        // Atualizar a visualização dos dados
+        const dadosAtualizados = {
+          ultimaAtualizacao: ultimaAtualizacao,
+          municipios: dadosMunicipios,
+          alertas: alertas
+        };
+        document.getElementById('dadosAtuais').textContent = JSON.stringify(dadosAtualizados, null, 2);
+        
+        // Atualizar a tabela de histórico
+        carregarHistoricoMunicipio();
+        
+        // Fechar o modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('modalExcluirMedicao'));
+        modal.hide();
+        
+        // Notificar usuário
+        alert('Medição excluída com sucesso!');
+        
+      } catch (erro) {
+        console.error('Erro ao excluir medição:', erro);
+        alert('Erro ao excluir medição: ' + erro.message);
+      }
+    }
+    
+    // Atualizar nível do rio
+    async function atualizarNivel(event) {
+      event.preventDefault();
+      
+      const municipioId = document.getElementById('municipio').value;
+      const nivelAtual = parseFloat(document.getElementById('nivelAtual').value);
+      const dataAtualizacao = document.getElementById('dataAtualizacao').value;
+      const variacao24h = parseFloat(document.getElementById('variacao24h').value);
+      const tendencia = document.getElementById('tendencia').value;
+      const risco = document.getElementById('risco').value;
+      
+      if (!municipioId || !nivelAtual || !dataAtualizacao || isNaN(variacao24h) || !tendencia || !risco) {
+        alert('Por favor, preencha todos os campos corretamente.');
+        return;
+      }
+      
+      try {
+        // Em um ambiente real, aqui seria feita uma requisição para o backend
+        // para atualizar os dados no servidor.
+        // Como é apenas uma demonstração, vamos apenas simular o sucesso
+        
+        // Atualizar os dados em memória
+        if (dadosMunicipios[municipioId]) {
+          dadosMunicipios[municipioId].nivelAtual = nivelAtual;
+          dadosMunicipios[municipioId].variacao24h = variacao24h;
+          dadosMunicipios[municipioId].tendencia = tendencia;
+          dadosMunicipios[municipioId].risco = risco;
+          dadosMunicipios[municipioId].atualizadoEm = new Date(dataAtualizacao).toISOString();
+          
+          // Adicionar entrada ao histórico
+          if (!historico[municipioId]) {
+            historico[municipioId] = [];
+          }
+          
+          const novaMedicao = {
+            id: `medicao-${new Date().getTime()}`,
+            data: new Date(dataAtualizacao).toISOString(),
+            nivel: nivelAtual,
+            tendencia: tendencia
+          };
+          
+          // Adicionar ao histórico e ordenar
+          historico[municipioId].push(novaMedicao);
+          historico[municipioId].sort((a, b) => new Date(b.data) - new Date(a.data));
+          
+          // Atualizar o histórico do município
+          dadosMunicipios[municipioId].historico = [...historico[municipioId]];
+          
+          // Atualizar a última atualização
+          ultimaAtualizacao = new Date().toISOString();
+          
+          // Atualizar a visualização dos dados
+          const dadosAtualizados = {
+            ultimaAtualizacao: ultimaAtualizacao,
+            municipios: dadosMunicipios,
+            alertas: alertas
+          };
+          document.getElementById('dadosAtuais').textContent = JSON.stringify(dadosAtualizados, null, 2);
+          
+          alert(`Dados do município ${dadosMunicipios[municipioId].nome} atualizados com sucesso!`);
+          
+          // Em um ambiente real, atualizaríamos o arquivo dados.json no servidor
+          console.log('Dados atualizados:', dadosMunicipios[municipioId]);
+          
+          // Se o município selecionado no histórico é o mesmo que está sendo atualizado, atualizar a tabela
+          if (document.getElementById('historicoMunicipio').value === municipioId) {
+            carregarHistoricoMunicipio();
+          }
+          
+          // Limpar formulário de nível, mas manter o município selecionado
+          document.getElementById('formNivel').reset();
+          document.getElementById('municipio').value = municipioId;
+          
+          // Preencher data atual novamente
+          const agora = new Date();
+          const dataFormatada = agora.toISOString().slice(0, 16);
+          document.getElementById('dataAtualizacao').value = dataFormatada;
+        } else {
+          alert('Município não encontrado nos dados.');
+        }
+      } catch (erro) {
+        console.error('Erro ao atualizar dados:', erro);
+        alert(`Erro ao atualizar dados: ${erro.message}`);
+      }
+    }
+    
+    // Adicionar alerta
+    async function adicionarAlerta(event) {
+      event.preventDefault();
+      
+      const municipioId = document.getElementById('alertaMunicipio').value;
+      const titulo = document.getElementById('alertaTitulo').value;
+      const nivel = document.getElementById('alertaNivel').value;
+      const descricao = document.getElementById('alertaDescricao').value;
+      const instrucoes = document.getElementById('alertaInstrucoes').value.split('\n').filter(i => i.trim());
+      const abrigos = document.getElementById('alertaAbrigos').value.split('\n').filter(a => a.trim());
+      
+      if (!municipioId || !titulo || !nivel || !descricao || instrucoes.length === 0) {
+        alert('Por favor, preencha todos os campos obrigatórios.');
+        return;
+      }
+      
+      try {
+        // Criar novo alerta
+        const novoAlerta = {
+          id: `alerta-${new Date().getTime()}`,
+          municipioId,
+          titulo,
+          nivel,
+          descricao,
+          instrucoes,
+          abrigos,
+          emitidoEm: new Date().toISOString()
+        };
+        
+        // Adicionar à lista global de alertas
+        alertas.push(novoAlerta);
+        
+        // Atualizar a última atualização
+        ultimaAtualizacao = new Date().toISOString();
+        
+        // Atualizar a visualização dos dados
+        const dados = {
+          ultimaAtualizacao: ultimaAtualizacao,
+          municipios: dadosMunicipios,
+          alertas: alertas
+        };
+        document.getElementById('dadosAtuais').textContent = JSON.stringify(dados, null, 2);
+        
+        alert(`Alerta para ${dadosMunicipios[municipioId]?.nome || municipioId} adicionado com sucesso!`);
+        console.log('Novo alerta:', novoAlerta);
+        
+        // Limpar formulário
+        document.getElementById('formAlerta').reset();
+      } catch (erro) {
+        console.error('Erro ao adicionar alerta:', erro);
+        alert(`Erro ao adicionar alerta: ${erro.message}`);
+      }
+    }
+    
+    // Função para exportar dados para um arquivo JSON
+    function exportarDadosJSON() {
+      try {
+        // Atualizar a data da última atualização
+        ultimaAtualizacao = new Date().toISOString();
+        
+        // Criar objeto completo com todos os dados
+        const dados = {
+          ultimaAtualizacao: ultimaAtualizacao,
+          municipios: dadosMunicipios,
+          alertas: alertas
+        };
+        
+        // Atualizar a visualização dos dados
+        document.getElementById('dadosAtuais').textContent = JSON.stringify(dados, null, 2);
+        
+        // Criar blob e link para download
+        const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'dados.json';
+        link.click();
+        
+        URL.revokeObjectURL(link.href);
+        
+        alert('Dados exportados com sucesso! Substitua o arquivo dados.json pelo arquivo baixado.');
+      } catch (erro) {
+        console.error('Erro ao exportar dados:', erro);
+        alert('Erro ao exportar dados: ' + erro.message);
+      }
+    }
+  </script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 
