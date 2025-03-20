@@ -1,5 +1,5 @@
 {
-  "ultimaAtualizacao": "2025/03/20 09:49:51",
+  "ultimaAtualizacao": "2025/03/20 10:05:08",
   "municipios": {
     "rio-branco": {
       "nome": "Rio Branco",
@@ -260,7 +260,6 @@
           "id": "medicao-xapuri-dolores-1742480636770-0"
         }
       ]
-      
     },
     "xapuri": {
       "nome": "Xapuri",
@@ -513,34 +512,28 @@
     "sena-madureira": {
       "nome": "Sena Madureira",
       "rio": "Iaco",
-      "nivelAtual": 10.35,
-      "nivelAlerta": 14.5,
+      "nivelAtual": 10.09,
+      "nivelAlerta": 14.0,
       "nivelInundacao": 15.2,
-      "variacao24h": 0.22,
-      "tendencia": "subindo",
-      "risco": "medio",
-      "atualizadoEm": "2025/03/20 09:30",
+      "variacao24h": -2.61,
+      "tendencia": "descendo",
+      "risco": "baixo",
+      "atualizadoEm": "2025/03/19 18:00",
       "latitude": -9.0659,
       "longitude": -68.6571,
       "contatoDefesaCivil": "(68) 3612-2427",
       "contatoBombeiros": "193",
       "historico": [
         {
-          "id": "medicao-1742481525216",
-          "data": "2025/03/20 09:30",
-          "nivel": 10.35,
-          "tendencia": "subindo"
+          "id": "medicao-1742482868437",
+          "data": "2025/03/20 06:00",
+          "nivel": 12.7,
+          "tendencia": "descendo"
         },
         {
-          "id": "medicao-1742481504856",
+          "id": "medicao-1742482852451",
           "data": "2025/03/19 18:00",
-          "nivel": 10.13,
-          "tendencia": "subindo"
-        },
-        {
-          "id": "medicao-sena-madureira-1742480636770-0",
-          "data": "2025/03/18 12:00",
-          "nivel": 9.87,
+          "nivel": 12.76,
           "tendencia": "estavel"
         }
       ]
@@ -548,34 +541,28 @@
     "manoel-urbano": {
       "nome": "Manoel Urbano",
       "rio": "Purus",
-      "nivelAtual": 9.75,
-      "nivelAlerta": 13.8,
-      "nivelInundacao": 14.5,
-      "variacao24h": 0.15,
+      "nivelAtual": 11.3,
+      "nivelAlerta": 13.5,
+      "nivelInundacao": 14.0,
+      "variacao24h": 1.21,
       "tendencia": "subindo",
       "risco": "baixo",
-      "atualizadoEm": "2025/03/20 09:15",
+      "atualizadoEm": "2025/03/20 06:00",
       "latitude": -8.8367,
       "longitude": -69.2658,
       "contatoDefesaCivil": "(68) 3611-1095",
       "contatoBombeiros": "193",
       "historico": [
         {
-          "id": "medicao-1742481525217",
-          "data": "2025/03/20 09:15",
-          "nivel": 9.75,
+          "id": "medicao-1742482980683",
+          "data": "2025/03/20 06:00",
+          "nivel": 11.3,
           "tendencia": "subindo"
         },
         {
-          "id": "medicao-1742481504857",
+          "id": "medicao-1742482965051",
           "data": "2025/03/19 18:00",
-          "nivel": 9.60,
-          "tendencia": "estavel"
-        },
-        {
-          "id": "medicao-manoel-urbano-1742480636770-0",
-          "data": "2025/03/18 12:00",
-          "nivel": 9.55,
+          "nivel": 10.09,
           "tendencia": "estavel"
         }
       ]
@@ -583,34 +570,28 @@
     "santa-rosa-do-purus": {
       "nome": "Santa Rosa do Purus",
       "rio": "Purus",
-      "nivelAtual": 8.82,
-      "nivelAlerta": 11.5,
-      "nivelInundacao": 12.4,
-      "variacao24h": -0.18,
-      "tendencia": "descendo",
+      "nivelAtual": 8.54,
+      "nivelAlerta": 8.0,
+      "nivelInundacao": 9.0,
+      "variacao24h": 0.27,
+      "tendencia": "subindo",
       "risco": "baixo",
-      "atualizadoEm": "2025/03/20 08:45",
+      "atualizadoEm": "2025/03/20 06:00",
       "latitude": -9.4472,
       "longitude": -70.4914,
       "contatoDefesaCivil": "(68) 3615-1050",
       "contatoBombeiros": "193",
       "historico": [
         {
-          "id": "medicao-1742481525218",
-          "data": "2025/03/20 08:45",
-          "nivel": 8.82,
-          "tendencia": "descendo"
+          "id": "medicao-1742483050186",
+          "data": "2025/03/20 06:00",
+          "nivel": 8.54,
+          "tendencia": "subindo"
         },
         {
-          "id": "medicao-1742481504858",
+          "id": "medicao-1742483033414",
           "data": "2025/03/19 18:00",
-          "nivel": 9.00,
-          "tendencia": "descendo"
-        },
-        {
-          "id": "medicao-santa-rosa-purus-1742480636770-0",
-          "data": "2025/03/18 12:00",
-          "nivel": 9.25,
+          "nivel": 8.27,
           "tendencia": "estavel"
         }
       ]
@@ -618,34 +599,28 @@
     "placido-de-castro": {
       "nome": "Plácido de Castro",
       "rio": "Abunã",
-      "nivelAtual": 7.45,
-      "nivelAlerta": 10.2,
-      "nivelInundacao": 11.5,
-      "variacao24h": 0.05,
+      "nivelAtual": 13.03,
+      "nivelAlerta": 12.0,
+      "nivelInundacao": 12.5,
+      "variacao24h": 0.01,
       "tendencia": "estavel",
-      "risco": "baixo",
-      "atualizadoEm": "2025/03/20 09:00",
+      "risco": "alto",
+      "atualizadoEm": "2025/03/20 06:00",
       "latitude": -10.3329,
       "longitude": -67.1871,
       "contatoDefesaCivil": "(68) 3237-1137",
       "contatoBombeiros": "193",
       "historico": [
         {
-          "id": "medicao-1742481525219",
-          "data": "2025/03/20 09:00",
-          "nivel": 7.45,
+          "id": "medicao-1742483101653",
+          "data": "2025/03/20 06:00",
+          "nivel": 13.03,
           "tendencia": "estavel"
         },
         {
-          "id": "medicao-1742481504859",
+          "id": "medicao-1742483084967",
           "data": "2025/03/19 18:00",
-          "nivel": 7.40,
-          "tendencia": "estavel"
-        },
-        {
-          "id": "medicao-placido-de-castro-1742480636770-0",
-          "data": "2025/03/18 12:00",
-          "nivel": 7.38,
+          "nivel": 13.02,
           "tendencia": "estavel"
         }
       ]
@@ -657,7 +632,7 @@
       "municipioId": "rio-branco",
       "titulo": "ALERTA - Rio Branco",
       "nivel": "alto",
-      "descricao": "O nível do Rio Acre em Rio Branco atingiu 15,28 m, ultrapassando tanto o nível de alerta (13,50 m) quanto o nível de inundação (14,00 m).",
+      "descricao": "O nível do Rio Acre em Rio Branco atingiu 15,22 m, ultrapassando tanto o nível de alerta (13,50 m) quanto o nível de inundação (14,00 m).",
       "instrucoes": [
         "Moradores de áreas de risco devem ficar atentos",
         "Mantenha documentos e objetos de valor em locais seguros",
