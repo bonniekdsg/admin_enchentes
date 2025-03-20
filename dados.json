@@ -1,5 +1,5 @@
 {
-  "ultimaAtualizacao": "2025/03/20 14:52:55",
+  "ultimaAtualizacao": "2025/03/20 16:16:39",
   "municipios": {
     "rio-branco": {
       "nome": "Rio Branco",
@@ -394,18 +394,36 @@
     "porto-acre": {
       "nome": "Porto Acre",
       "rio": "Acre",
-      "nivelAtual": 13.88,
+      "nivelAtual": 13.9,
       "nivelAlerta": 12,
       "nivelInundacao": 12.5,
-      "variacao24h": 0.08,
-      "tendencia": "subindo",
+      "variacao24h": 0,
+      "tendencia": "estavel",
       "risco": "alto",
-      "atualizadoEm": "2025/03/20 06:00",
+      "atualizadoEm": "2025/03/20 15:00",
       "latitude": -9.5865,
       "longitude": -67.5478,
       "contatoDefesaCivil": "199",
       "contatoBombeiros": "193",
       "historico": [
+        {
+          "id": "medicao-1742505336688",
+          "data": "2025/03/20 15:00",
+          "nivel": 13.9,
+          "tendencia": "estavel"
+        },
+        {
+          "id": "medicao-1742505318344",
+          "data": "2025/03/20 12:00",
+          "nivel": 13.9,
+          "tendencia": "estavel"
+        },
+        {
+          "id": "medicao-1742505300812",
+          "data": "2025/03/20 09:00",
+          "nivel": 13.9,
+          "tendencia": "estavel"
+        },
         {
           "id": "medicao-1742481996208",
           "data": "2025/03/20 06:00",
