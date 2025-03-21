@@ -754,13 +754,13 @@
     "rodrigues-alves": {
       "nome": "Rodrigues Alves",
       "rio": "Juruá",
-      "nivelAtual": 11.52,
-      "nivelAlerta": 12.0,
+      "nivelAtual": 14.68,
+      "nivelAlerta": 12.5,
       "nivelInundacao": 13.5,
       "variacao24h": 0.05,
       "tendencia": "subindo",
       "risco": "medio",
-      "atualizadoEm": "2025/03/21 06:00",
+      "atualizadoEm": "2025/03/20 06:00",
       "latitude": -7.8822,
       "longitude": -72.6619,
       "contatoDefesaCivil": "(68) 3342-1122",
@@ -772,24 +772,6 @@
           "nivel": 11.52,
           "tendencia": "subindo"
         },
-        {
-          "id": "medicao-1742564123456",
-          "data": "2025/03/20 18:00",
-          "nivel": 11.47,
-          "tendencia": "subindo"
-        },
-        {
-          "id": "medicao-1742481987654",
-          "data": "2025/03/20 06:00",
-          "nivel": 11.42,
-          "tendencia": "estavel"
-        },
-        {
-          "id": "medicao-1742480123456",
-          "data": "2025/03/19 18:00",
-          "nivel": 11.43,
-          "tendencia": "estavel"
-        }
       ]
     }
   },
