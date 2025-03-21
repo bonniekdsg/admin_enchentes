@@ -74,17 +74,17 @@
 <body>
   <header class="header" role="banner">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center">
+      <div class="d-flex justify-content-between align-items-center">
             <!-- Logo original do Radar de Enchentes MPAC (lado esquerdo) -->
-            <div>
+        <div>
                 <img src="https://static.wixstatic.com/media/c96204_fecf1c65eaf64f22b97b4d31736b208c~mv2.png" alt="Radar de Enchentes MPAC" class="img-fluid" style="max-height: 120px;">
-            </div>
+        </div>
             
             <!-- Texto de Administração (lado direito) -->
             <div class="text-end">
                 <h4 class="text-white">Administração</h4>
             </div>
-        </div>
+      </div>
     </div>
   </header>
 
@@ -167,6 +167,11 @@
                   <option value="ponte-do-liberdade">Ponte do Liberdade</option>
                   <option value="porto-walter">Porto Walter</option>
                   <option value="marechal-thaumaturgo">Marechal Thaumaturgo</option>
+                  <option value="sena-madureira">Sena Madureira</option>
+                  <option value="manoel-urbano">Manoel Urbano</option>
+                  <option value="santa-rosa-do-purus">Santa Rosa do Purus</option>
+                  <option value="placido-de-castro">Plácido de Castro</option>
+                  <option value="rodrigues-alves">Rodrigues Alves</option>
                 </select>
               </div>
               
@@ -307,6 +312,11 @@
                   <option value="ponte-do-liberdade">Ponte do Liberdade</option>
                   <option value="porto-walter">Porto Walter</option>
                   <option value="marechal-thaumaturgo">Marechal Thaumaturgo</option>
+                  <option value="sena-madureira">Sena Madureira</option>
+                  <option value="manoel-urbano">Manoel Urbano</option>
+                  <option value="santa-rosa-do-purus">Santa Rosa do Purus</option>
+                  <option value="placido-de-castro">Plácido de Castro</option>
+                  <option value="rodrigues-alves">Rodrigues Alves</option>
                 </select>
               </div>
               
@@ -357,24 +367,24 @@
               <button type="button" class="btn btn-success" id="btnExportarJSON">
                 <i class="fas fa-download me-2"></i> Exportar JSON Atualizado
               </button>
-            </div>
+              </div>
             <pre id="dadosAtuais" class="p-3 bg-light" style="max-height: 400px; overflow: auto;">Carregando dados...</pre>
-          </div>
-        </div>
-        
+              </div>
+              </div>
+              
         <div class="mt-4" id="resultados"></div>
-      </div>
-    </div>
-  </div>
-  
+              </div>
+              </div>
+              </div>
+              
   <!-- Rodapé no mesmo estilo do index.html -->
   <footer class="py-4 mt-5" style="background-color: #343a40; color: white;">
     <div class="container">
-      <div class="row">
+              <div class="row">
         <div class="col-md-4 mb-4 mb-md-0">
           <h5 class="mb-3">Sistema de Monitoramento de Enchentes</h5>
           <p class="mb-0" style="font-size: 0.9rem;">Sistema de monitoramento e alerta para enchentes no estado do Acre.</p>
-        </div>
+                </div>
         <div class="col-md-4 mb-4 mb-md-0">
           <h5 class="mb-3">Contatos de Emergência</h5>
           <ul class="list-unstyled mb-0" style="font-size: 0.9rem;">
@@ -383,27 +393,27 @@
             <li class="mb-2"><i class="fas fa-phone-alt me-2"></i> Polícia Militar: 190</li>
             <li class="mb-2"><i class="fas fa-phone-alt me-2"></i> SAMU: 192</li>
           </ul>
-        </div>
+                </div>
         <div class="col-md-4">
           <h5 class="mb-3">Parceiros</h5>
           <div class="d-flex flex-wrap">
             <div class="me-3 mb-3">
               <img src="https://via.placeholder.com/80x40?text=MPAC" alt="Logo MPAC" width="80" height="40" class="bg-white rounded p-1">
-            </div>
+              </div>
             <div class="me-3 mb-3">
               <img src="https://via.placeholder.com/80x40?text=DefesaCivil" alt="Logo Defesa Civil" width="80" height="40" class="bg-white rounded p-1">
-            </div>
+                </div>
+                </div>
+              </div>
           </div>
-        </div>
-      </div>
       <div class="border-top border-secondary pt-4 mt-4">
         <div class="row">
           <div class="col-12 text-center">
             <p class="text-white fw-normal mb-0" style="font-weight: 400 !important; font-size: 0.85rem !important;">© 2025 Desenvolvido por Seringal Lab - Laboratório de Inovação - Todos os direitos reservados.</p>
-          </div>
         </div>
       </div>
     </div>
+  </div>
   </footer>
   
   <script>
@@ -783,11 +793,11 @@
         switch (tendenciaTxt) {
           case 'subindo':
             tendenciaDisplay = '<i class="fas fa-arrow-up text-danger me-1"></i>Subindo';
-            break;
+          break;
           case 'descendo':
             tendenciaDisplay = '<i class="fas fa-arrow-down text-success me-1"></i>Descendo';
-            break;
-          default:
+          break;
+        default:
             tendenciaDisplay = '<i class="fas fa-equals text-secondary me-1"></i>Estável';
         }
         
@@ -1038,7 +1048,7 @@
           // Preencher data atual novamente
           const dataFormatada = `${ano}-${mes}-${dia}T${hora}:${minuto}`;
           document.getElementById('dataAtualizacao').value = dataFormatada;
-        } else {
+      } else {
           alert('Município não encontrado nos dados.');
         }
       } catch (erro) {
