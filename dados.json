@@ -1,5 +1,5 @@
 {
-  "ultimaAtualizacao": "2025/03/20 16:16:39",
+  "ultimaAtualizacao": "2025/03/20 18:01:52",
   "municipios": {
     "rio-branco": {
       "nome": "Rio Branco",
@@ -536,18 +536,30 @@
     "sena-madureira": {
       "nome": "Sena Madureira",
       "rio": "Iaco",
-      "nivelAtual": 12.7,
+      "nivelAtual": 12.61,
       "nivelAlerta": 14,
       "nivelInundacao": 15.2,
-      "variacao24h": -0.06,
+      "variacao24h": -0.03,
       "tendencia": "descendo",
       "risco": "baixo",
-      "atualizadoEm": "2025/03/20 06:00",
+      "atualizadoEm": "2025/03/20 18:00",
       "latitude": -9.0659,
       "longitude": -68.6571,
       "contatoDefesaCivil": "199",
       "contatoBombeiros": "193",
       "historico": [
+        {
+          "id": "medicao-1742511669629",
+          "data": "2025/03/20 18:00",
+          "nivel": 12.61,
+          "tendencia": "descendo"
+        },
+        {
+          "id": "medicao-1742511648318",
+          "data": "2025/03/20 12:00",
+          "nivel": 12.64,
+          "tendencia": "descendo"
+        },
         {
           "id": "medicao-1742495499596",
           "data": "2025/03/20 06:00",
