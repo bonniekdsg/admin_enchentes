@@ -773,6 +773,7 @@
           "tendencia": "subindo"
         }
       ]
+    }
   },
   "alertas": [
     {
@@ -793,4 +794,3 @@
       "emitidoEm": "2025-03-20T12:00:00"
     }
   ]
-}
