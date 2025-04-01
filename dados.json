@@ -1,21 +1,33 @@
 {
-  "ultimaAtualizacao": "2025/03/31 10:36:21",
+  "ultimaAtualizacao": "2025/04/01 14:26:03",
   "municipios": {
     "rio-branco": {
       "nome": "Rio Branco",
       "rio": "Acre",
-      "nivelAtual": 8.86,
+      "nivelAtual": 8.4,
       "nivelAlerta": 13.5,
       "nivelInundacao": 14,
-      "variacao24h": -0.11,
+      "variacao24h": -0.17,
       "tendencia": "descendo",
       "risco": "baixo",
-      "atualizadoEm": "2025/03/31 08:45",
+      "atualizadoEm": "2025/04/01 12:45",
       "latitude": -9.9753,
       "longitude": -67.8249,
       "contatoDefesaCivil": "(68) 99985-2018",
       "contatoBombeiros": "193",
       "historico": [
+        {
+          "id": "medicao-1743535427184",
+          "data": "2025/04/01 12:45",
+          "nivel": 8.4,
+          "tendencia": "descendo"
+        },
+        {
+          "id": "medicao-1743535401552",
+          "data": "2025/04/01 05:00",
+          "nivel": 8.57,
+          "tendencia": "descendo"
+        },
         {
           "id": "medicao-1743435373457",
           "data": "2025/03/31 08:45",
@@ -584,12 +596,18 @@
       "variacao24h": 0,
       "tendencia": "estavel",
       "risco": "alto",
-      "atualizadoEm": "2025/03/31 05:00",
+      "atualizadoEm": "2025/04/01 05:00",
       "latitude": -8.2583,
       "longitude": -70.9695,
       "contatoDefesaCivil": "199",
       "contatoBombeiros": "193",
       "historico": [
+        {
+          "id": "medicao-1743535217977",
+          "data": "2025/04/01 05:00",
+          "nivel": 1.43,
+          "tendencia": "estavel"
+        },
         {
           "id": "medicao-1743435051228",
           "data": "2025/03/31 05:00",
@@ -684,18 +702,24 @@
     "assis-brasil": {
       "nome": "Assis Brasil",
       "rio": "Bacia Rio Acre e Abunã",
-      "nivelAtual": 3.1,
+      "nivelAtual": 3.16,
       "nivelAlerta": 11.3,
       "nivelInundacao": 12.5,
-      "variacao24h": -0.08,
-      "tendencia": "descendo",
+      "variacao24h": 0.06,
+      "tendencia": "subindo",
       "risco": "baixo",
-      "atualizadoEm": "2025/03/31 05:00",
+      "atualizadoEm": "2025/04/01 05:00",
       "latitude": -10.9387,
       "longitude": -69.5561,
       "contatoDefesaCivil": "199",
       "contatoBombeiros": "193",
       "historico": [
+        {
+          "id": "medicao-1743535239888",
+          "data": "2025/04/01 05:00",
+          "nivel": 3.16,
+          "tendencia": "subindo"
+        },
         {
           "id": "medicao-1743435087955",
           "data": "2025/03/31 05:00",
@@ -802,18 +826,24 @@
     "brasileia": {
       "nome": "Brasiléia",
       "rio": "Bacia Rio Acre e Abunã",
-      "nivelAtual": 2.65,
+      "nivelAtual": 2.17,
       "nivelAlerta": 9.8,
       "nivelInundacao": 11.4,
-      "variacao24h": 0.43,
-      "tendencia": "subindo",
+      "variacao24h": -0.48,
+      "tendencia": "descendo",
       "risco": "baixo",
-      "atualizadoEm": "2025/03/31 05:00",
+      "atualizadoEm": "2025/04/01 05:00",
       "latitude": -11.0164,
       "longitude": -68.7499,
       "contatoDefesaCivil": "199",
       "contatoBombeiros": "193",
       "historico": [
+        {
+          "id": "medicao-1743535260127",
+          "data": "2025/04/01 05:00",
+          "nivel": 2.17,
+          "tendencia": "descendo"
+        },
         {
           "id": "medicao-1743435124875",
           "data": "2025/03/31 05:00",
@@ -944,18 +974,24 @@
     "xapuri-dolores": {
       "nome": "Xapuri C. Dolores",
       "rio": "Xapuri",
-      "nivelAtual": 4.8,
+      "nivelAtual": 4.78,
       "nivelAlerta": 0,
       "nivelInundacao": 0,
-      "variacao24h": -0.21,
-      "tendencia": "descendo",
+      "variacao24h": -0.02,
+      "tendencia": "estavel",
       "risco": "alto",
-      "atualizadoEm": "2025/03/31 05:00",
+      "atualizadoEm": "2025/04/01 05:00",
       "latitude": -10.6532,
       "longitude": -68.3028,
       "contatoDefesaCivil": "199",
       "contatoBombeiros": "193",
       "historico": [
+        {
+          "id": "medicao-1743535279232",
+          "data": "2025/04/01 05:00",
+          "nivel": 4.78,
+          "tendencia": "estavel"
+        },
         {
           "id": "medicao-1743435173908",
           "data": "2025/03/31 05:00",
@@ -1017,15 +1053,21 @@
       "nivelAtual": 4.28,
       "nivelAlerta": 12.5,
       "nivelInundacao": 13.4,
-      "variacao24h": 0.07,
-      "tendencia": "subindo",
+      "variacao24h": 0,
+      "tendencia": "estavel",
       "risco": "baixo",
-      "atualizadoEm": "2025/03/31 05:00",
+      "atualizadoEm": "2025/04/01 05:00",
       "latitude": -10.6518,
       "longitude": -68.5017,
       "contatoDefesaCivil": "199",
       "contatoBombeiros": "193",
       "historico": [
+        {
+          "id": "medicao-1743535309072",
+          "data": "2025/04/01 05:00",
+          "nivel": 4.28,
+          "tendencia": "estavel"
+        },
         {
           "id": "medicao-1743435208467",
           "data": "2025/03/31 05:00",
@@ -1156,18 +1198,24 @@
     "capixaba": {
       "nome": "Capixaba",
       "rio": "Abunã",
-      "nivelAtual": 4.8,
+      "nivelAtual": 4.84,
       "nivelAlerta": 14,
       "nivelInundacao": 14.7,
-      "variacao24h": 0.33,
+      "variacao24h": 0.04,
       "tendencia": "subindo",
       "risco": "baixo",
-      "atualizadoEm": "2025/03/31 05:00",
+      "atualizadoEm": "2025/04/01 05:00",
       "latitude": -10.5769,
       "longitude": -67.6861,
       "contatoDefesaCivil": "199",
       "contatoBombeiros": "193",
       "historico": [
+        {
+          "id": "medicao-1743535330392",
+          "data": "2025/04/01 05:00",
+          "nivel": 4.84,
+          "tendencia": "subindo"
+        },
         {
           "id": "medicao-1743435249298",
           "data": "2025/03/31 05:00",
@@ -1298,18 +1346,24 @@
     "espalha": {
       "nome": "Espalha",
       "rio": "Iaco",
-      "nivelAtual": 7.07,
+      "nivelAtual": 6.76,
       "nivelAlerta": 0,
       "nivelInundacao": 0,
-      "variacao24h": -0.13,
+      "variacao24h": -0.31,
       "tendencia": "descendo",
       "risco": "alto",
-      "atualizadoEm": "2025/03/31 05:00",
+      "atualizadoEm": "2025/04/01 05:00",
       "latitude": -9.1869,
       "longitude": -70.3451,
       "contatoDefesaCivil": "199",
       "contatoBombeiros": "193",
       "historico": [
+        {
+          "id": "medicao-1743535353184",
+          "data": "2025/04/01 05:00",
+          "nivel": 6.76,
+          "tendencia": "descendo"
+        },
         {
           "id": "medicao-1743435279762",
           "data": "2025/03/31 05:00",
@@ -1368,18 +1422,24 @@
     "riozinho-do-rola": {
       "nome": "Riozinho do Rola",
       "rio": "Riozinho do Rola",
-      "nivelAtual": 11.25,
+      "nivelAtual": 10.16,
       "nivelAlerta": 14.5,
       "nivelInundacao": 15,
-      "variacao24h": -0.68,
+      "variacao24h": -1.09,
       "tendencia": "descendo",
       "risco": "baixo",
-      "atualizadoEm": "2025/03/31 05:00",
+      "atualizadoEm": "2025/04/01 05:00",
       "latitude": -10.0841,
       "longitude": -68.0595,
       "contatoDefesaCivil": "199",
       "contatoBombeiros": "193",
       "historico": [
+        {
+          "id": "medicao-1743535374832",
+          "data": "2025/04/01 05:00",
+          "nivel": 10.16,
+          "tendencia": "descendo"
+        },
         {
           "id": "medicao-1743435313002",
           "data": "2025/03/31 05:00",
@@ -1510,18 +1570,24 @@
     "porto-acre": {
       "nome": "Porto Acre",
       "rio": "Acre",
-      "nivelAtual": 12.04,
+      "nivelAtual": 10.26,
       "nivelAlerta": 12,
       "nivelInundacao": 12.5,
-      "variacao24h": -0.29,
+      "variacao24h": -1.78,
       "tendencia": "descendo",
-      "risco": "medio",
-      "atualizadoEm": "2025/03/27 06:00",
+      "risco": "baixo",
+      "atualizadoEm": "2025/04/01 05:00",
       "latitude": -9.5865,
       "longitude": -67.5478,
       "contatoDefesaCivil": "199",
       "contatoBombeiros": "193",
       "historico": [
+        {
+          "id": "medicao-1743535455737",
+          "data": "2025/04/01 05:00",
+          "nivel": 10.26,
+          "tendencia": "descendo"
+        },
         {
           "id": "medicao-1743082676232",
           "data": "2025/03/27 06:00",
@@ -1802,18 +1868,24 @@
     "sena-madureira": {
       "nome": "Sena Madureira",
       "rio": "Iaco",
-      "nivelAtual": 7.66,
+      "nivelAtual": 7.61,
       "nivelAlerta": 14,
       "nivelInundacao": 15.2,
       "variacao24h": -0.05,
       "tendencia": "descendo",
       "risco": "baixo",
-      "atualizadoEm": "2025/03/31 06:00",
+      "atualizadoEm": "2025/04/01 05:00",
       "latitude": -9.0659,
       "longitude": -68.6571,
       "contatoDefesaCivil": "199",
       "contatoBombeiros": "193",
       "historico": [
+        {
+          "id": "medicao-1743535491808",
+          "data": "2025/04/01 05:00",
+          "nivel": 7.61,
+          "tendencia": "descendo"
+        },
         {
           "id": "medicao-1743434431697",
           "data": "2025/03/31 06:00",
@@ -2105,18 +2177,24 @@
     "placido-de-castro": {
       "nome": "Plácido de Castro",
       "rio": "Abunã",
-      "nivelAtual": 12.32,
+      "nivelAtual": 12.18,
       "nivelAlerta": 12,
       "nivelInundacao": 12.5,
-      "variacao24h": -0.06,
+      "variacao24h": -0.14,
       "tendencia": "descendo",
       "risco": "medio",
-      "atualizadoEm": "2025/03/31 06:00",
+      "atualizadoEm": "2025/04/01 05:00",
       "latitude": -10.3329,
       "longitude": -67.1871,
       "contatoDefesaCivil": "199",
       "contatoBombeiros": "193",
       "historico": [
+        {
+          "id": "medicao-1743535536272",
+          "data": "2025/04/01 05:00",
+          "nivel": 12.18,
+          "tendencia": "descendo"
+        },
         {
           "id": "medicao-1743434585305",
           "data": "2025/03/31 06:00",
